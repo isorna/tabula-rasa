@@ -4,6 +4,10 @@
 
 Fixed login bugs, and moved private firebase data connection information to the `/data/app-dataconfig.js` file, it won't be committed.
 
+Added a [TO DO](TODO.md) file.
+
+Login dialog completed.
+
 ## 12/08/2016
 
 Some components were renamed, and the content architecture has been decided.

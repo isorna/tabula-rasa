@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <script src="../data/app-dataconfig.js"></script>
 
 <dom-module id="app-data">
@@ -17,16 +18,33 @@
       [hidden="true"] {
         display: none;
       }
-
-      .user-data img {
+      .user-data {
+        overflow: hidden;
+      }
+      .user-data img,
+      .user-data paper-icon-button {
         display: block;
-        border: 1px solid #ccc;
-        padding: 4px;
+        border-radius: 48px;
+        width: 96px;
+        height: 96px;
+        padding: 0px;
         background-color: #fff;
         float: left;
-        margin: 0 30px 30px 0;
+        margin: 0 30px 0 0;
+        color: #666;
       }
       .user-data button {
+        float: right;
+      }
+      .user-data em {
+        display: block;
+        color: #666;
+        font-style: normal;
+      }
+
+      paper-button {
+        color: #2196F3;
+        font-weight: bold;
         float: right;
       }
 
@@ -86,18 +104,18 @@
         <button type="button" on-tap="createUserWithEmailAndPassword">Sign Up</button>
       </form-->
       <!--h3>Anonymous/OAuth</h3-->
-      <p>
-        <!--button on-tap="signInAnonymously">Sign In Anonymously</button-->
-        <button on-tap="_signInWithGoogle">Sign In With Google</button>
-      </p>
+      <paper-icon-button icon="account-circle"></paper-icon-button>
+      <p><strong>User identification</strong><em>Log in to get access to the full site.</em></p>
+      <!--button on-tap="signInAnonymously">Sign In Anonymously</button-->
+      <paper-button on-tap="_signInWithGoogle">Sign In With Google</paper-button>
     </div>
     <div hidden$="{{!user}}" class="user-data">
       <img src="{{user.photoURL}}" alt="{{user.displayName}}">
-      <p>You're identified as <strong>{{user.displayName}}</strong> &lt;{{user.email}}&gt;</p>
+      <p><strong>{{user.displayName}}</strong><em>{{user.email}}</em></p>
       <!--p>uid: {{user.uid}}</p>
       <p>email verified: {{user.emailVerified}}</p-->
 
-      <button on-tap="_signOut">Sign Out</button>
+      <paper-button on-tap="_signOut">Sign Out</paper-button>
     </div>
   </template>
 
