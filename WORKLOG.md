@@ -6,7 +6,7 @@ Fixed login bugs, and moved private firebase data connection information to the 
 
 Added a [TO DO](TODO.md) file.
 
-Login dialog completed.
+Login dialog completed. Now users are saved on the database.
 
 ## 12/08/2016
 
@@ -16,7 +16,7 @@ Added some icons from the [iron-icons component](https://elements.polymer-projec
 
 ## 11/08/2016
 
-Added Google login Auth.
+Added Firebase's [Google login Auth](https://github.com/firebase/polymerfire/blob/master/demo/firebase-auth.html).
 
 App views are now reorganized, and they've been identified with icons.
 
