@@ -19,7 +19,8 @@
     "polymerfire": "firebase/polymerfire#^0.9.4",
     "note-app-elements": "polymerlabs/note-app-elements",
     "paper-dialog": "PolymerElements/paper-dialog#^1.1.0",
-    "iron-ajax": "PolymerElements/iron-ajax#^1.4.3"
+    "iron-ajax": "PolymerElements/iron-ajax#^1.4.3",
+    "paper-input": "PolymerElements/paper-input#^1.1.17"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

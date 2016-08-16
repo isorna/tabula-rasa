@@ -138,7 +138,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="home" href="/">Home</a>
-          <a name="user" href="/user">User</a>
+          <a name="write" href="/write">User</a>
           <a name="messages" href="/messages">Messages</a>
           <a name="settings" href="/settings">Settings</a>
         </iron-selector>
@@ -160,7 +160,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
           <home-view name="home"></home-view>
-          <user-view name="user"></user-view>
+          <write-view name="write" user="{{user}}"></write-view>
           <messages-view name="messages"></messages-view>
           <settings-view name="settings"></settings-view>
         </iron-pages>
@@ -186,7 +186,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
 
         user: {
-          type: Object
+          type: Object,
+          notify: true
         },
 
         accountButtonIcon: {

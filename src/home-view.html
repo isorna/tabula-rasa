@@ -9,6 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 
 <dom-module id="home-view">
@@ -50,50 +51,47 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <div class="card">
-      <div class="circle"><iron-icon icon="icons:home"></iron-icon></div>
-      <h1>Home</h1>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
-      <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
-    </div>
-    <div class="card">
-      <div class="circle"><iron-icon icon="icons:home"></iron-icon></div>
-      <h1>Home</h1>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
-      <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
-    </div>
-    <div class="card">
-      <div class="circle"><iron-icon icon="icons:home"></iron-icon></div>
-      <h1>Home</h1>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
-      <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
-    </div>
-    <div class="card">
-      <div class="circle"><iron-icon icon="icons:home"></iron-icon></div>
-      <h1>Home</h1>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
-      <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
-    </div>
-    <div class="card">
-      <div class="circle"><iron-icon icon="icons:home"></iron-icon></div>
-      <h1>Home</h1>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
-      <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
-    </div>
-    <div class="card">
-      <div class="circle"><iron-icon icon="icons:home"></iron-icon></div>
-      <h1>Home</h1>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
-      <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
-    </div>
+    <firebase-query
+      path="/posts"
+      data="{{posts}}">
+    </firebase-query>
 
+    <template is="dom-repeat" items="{{posts}}" as="post">
+      <div class="card">
+        <p><strong>{{post.title}}</strong></p>
+        <p><em>{{post.author}}</em>, {{_toDate(post.date)}}</p>
+      </div>
+    </template>
+
+    <!--div class="card">
+      <div class="circle"><iron-icon icon="icons:home"></iron-icon></div>
+      <h1>Home</h1>
+      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
+      <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
+    </div-->
   </template>
 
   <script>
 
     Polymer({
 
-      is: 'home-view'
+      is: 'home-view',
+      properties: {
+        posts: {
+          type: Object,
+          notify: true,
+          observer: '_dataChanged'
+        }
+      },
+
+      _dataChanged: function(newData, oldData) {
+        // do something when the query returns values
+        console.log(newData);
+      },
+
+      _toDate: function(timestamp) {
+        return new Date (timestamp);
+      }
 
     });
 
