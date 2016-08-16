@@ -16,12 +16,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="my-icons.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="app-icons.html">
+<link rel="import" href="app-data.html">
 
-<dom-module id="my-app">
+<dom-module id="app-shell">
 
   <template>
 
@@ -32,13 +35,52 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --app-primary-color: #4285f4;
         --app-secondary-color: black;
       }
-
+      /*
       app-header {
         background-color: var(--app-primary-color);
         color: #fff;
+      }*/
+      app-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 212px;
+        color: #fff;
+        background-color: var(--app-primary-color);/*#3f51b5*/
+        --app-header-background-front-layer: {
+          background-image: url(../images/bg2.jpg);
+          background-position: left center;
+        };
       }
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
+      }
+      app-toolbar.tall {
+        height: 148px;
+      }
+      [title] {
+        font-weight: lighter;
+        margin-left: 108px;
+      }
+      [condensed-title] {
+        font-weight: lighter;
+        margin-left: 30px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      [condensed-title] i {
+        font-weight: 100;
+        font-style: normal;
+      }
+      @media (max-width: 639px) {
+        [main-title] {
+          margin-left: 50px;
+          font-size: 30px;
+        }
+        [condensed-title] {
+          font-size: 15px;
+        }
       }
 
       .drawer-list {
@@ -59,6 +101,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding-left: 32px;
       }
 
+      #accountDialog {
+        position: fixed;
+        top: 64px;
+        right: 64px;
+        bottom: 64px;
+        left: 64px;
+        overflow: auto;
+      }
+
+      #accountButton {
+        /*
+        https://css-tricks.com/clipping-masking-css/
+        */
+        -webkit-clip-path: circle(12px at 50% 50%);
+        clip-path: circle(12px at 50% 50%);
+      }
 
     </style>
 
@@ -69,32 +127,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
+    <paper-dialog id="accountDialog" entry-animation="fade-in-animation" exit-animation="fade-out-animation" with-backdrop>
+      <h1>User identification</h1>
+      <app-data user="{{user}}"></app-data>
+    </paper-dialog>
+
     <app-drawer-layout fullbleed>
 
       <!-- Drawer content -->
       <app-drawer>
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="view1" href="/view1">View One</a>
-          <a name="view2" href="/view2">View Two</a>
-          <a name="view3" href="/view3">View Three</a>
+          <a name="home" href="/">Home</a>
+          <a name="user" href="/user">User</a>
+          <a name="messages" href="/messages">Messages</a>
         </iron-selector>
       </app-drawer>
 
       <!-- Main content -->
       <app-header-layout has-scrolling-region>
 
-        <app-header condenses reveals effects="waterfall">
-          <app-toolbar>
-            <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div title>My App</div>
-          </app-toolbar>
-        </app-header>
+        <app-header condenses reveals effects="waterfall resize-title blend-background parallax-background">
+           <app-toolbar>
+             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+             <h4 condensed-title>Tabula Rasa</h4>
+             <paper-icon-button src="{{user.photoURL}}" alt=="{{user.displayName}}" icon="{{accountButtonIcon}}" id="accountButton"></paper-icon-button>
+           </app-toolbar>
+           <app-toolbar class="tall">
+             <h1 title>Tabula Rasa</h1>
+           </app-toolbar>
+         </app-header>
 
         <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
-          <my-view1 name="view1"></my-view1>
-          <my-view2 name="view2"></my-view2>
-          <my-view3 name="view3"></my-view3>
+          <home-view name="home"></home-view>
+          <user-view name="user"></user-view>
+          <messages-view name="messages"></messages-view>
         </iron-pages>
 
       </app-header-layout>
@@ -107,7 +174,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
 
-      is: 'my-app',
+      is: 'app-shell',
 
       properties: {
 
@@ -117,20 +184,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           observer: '_pageChanged'
         },
 
+        user: {
+          type: Object
+        },
+
+        accountButtonIcon: {
+          type: String,
+          value: 'account-circle',
+          computed: '_computeAccountButtonIcon(user)'
+        }
+
       },
 
       observers: [
         '_routePageChanged(routeData.page)'
       ],
 
+      listeners: {
+        'accountButton.tap': '_showAccountDialog'
+      },
+
       _routePageChanged: function(page) {
-        this.page = page || 'view1';
+        this.page = page || 'home';
       },
 
       _pageChanged: function(page) {
         // load page import on demand.
         this.importHref(
-          this.resolveUrl('my-' + page + '.html'), null, null, true);
+          this.resolveUrl(page + '-view.html'), null, null, true);
+      },
+
+      _showAccountDialog: function() {
+        this.$.accountDialog.open();
+      },
+
+      _computeAccountButtonIcon: function(user) {
+        return (user) ? null : 'account-circle'
       }
 
     });
